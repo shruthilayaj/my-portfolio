@@ -1,0 +1,352 @@
+### Before we get started
+
+You’ll need to have [Node >= 14.0.0 and npm >= 5.6](https://nodejs.org/en/) on your machine.
+
+### Create React App
+
+[Create React App](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app) sets up your development environment and generates a template with everything you’ll need to get started with your app.
+
+We’re going to generate a create-react-app project with an official chakra-ui typescript template with the following code:
+
+```bash
+# TypeScript using npm
+npx create-react-app my-portfolio --template @chakra-ui/typescript
+
+# or npx create-react-app@5.0.1 my-portfolio --template @chakra-ui/typescript
+```
+
+Let’s see the project that was generated! Type the following commands to start your development server:
+
+```bash
+cd my-portfolio
+npm start
+```
+
+Your app should open up on [`http://localhost:3000/`](http://localhost:3000/) and should display the stuff in `App.tsx`
+
+### Some organization
+
+All of our React code lives in the `src` folder, let’s make a `views` folder in there to organize some of the views we’re going to build!
+
+```bash
+mkdir src/views
+touch src/views/AboutMe.tsx
+```
+
+Let’s start by adding some basic code to the `AboutMe.tsx` file:
+
+```tsx
+import { Box } from "@chakra-ui/react"
+
+export const AboutMe = () => (
+  <Box>
+    Hi, I'm Dameli Ushbayeva!
+  </Box>
+)
+```
+
+We want to add this component to the root of the app, so in `App.tsx` import the AboutMe component:
+
+```tsx
+import { AboutMe } from "./views/AboutMe";
+```
+
+Add it to your `App` component:
+
+```tsx
+export const App = () => (
+  <ChakraProvider theme={theme}>
+    <Box textAlign="center" fontSize="xl">
+      <Grid minH="100vh" p={3}>
+        <AboutMe />
+        <ColorModeSwitcher justifySelf="flex-end" />
+      </Grid>
+    </Box>
+  </ChakraProvider>
+)
+```
+
+Once you hit save, you should see the change reflected immediately on your app. 
+
+We want to add more components to the about me section - so we probably want to add something that can contain multiple components on a page - [Containers](https://chakra-ui.com/docs/components/container/usage), let’s checkout some of the props we can use here `centerContent`, `margin`
+
+```tsx
+import { Box, Container } from "@chakra-ui/react"
+
+export const AboutMe = () => (
+  <Container centerContent={false} margin={1}>
+    <Box textAlign={'left'}>
+      Hi, I'm Dameli Ushbayeva!
+    </Box>
+  </Container>
+)
+```
+
+Change up some css and add a few more pieces!
+
+```tsx
+export const AboutMe = () => (
+  <Container centerContent={false} margin='1'>
+    <Box textAlign='left'>
+      <Box fontSize='30px' paddingTop='10' paddingBottom='2'>
+        Hi, I'm Dameli Ushbayeva!
+      </Box>
+      <p>I'm a Software Engineer at Sentry. I'm a big fan of Functional Programming and super fast applications ⚡</p>
+    </Box>
+    <Box textAlign='left'>
+      <Box paddingTop='10' paddingBottom='2' fontWeight='semibold'>
+        Education
+      </Box>
+      <Box fontSize='medium'>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </Box>
+    </Box>
+
+    <Box textAlign='left' paddingBottom={6}>
+      <Box paddingTop='10' paddingBottom='2' fontWeight='semibold'>
+        Skills
+      </Box>
+      <Box fontSize='medium'>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </Box>
+    </Box>
+  </Container>
+)
+```
+
+**Grid**
+
+Let’s add that little skills grid! Add `[Grid](https://chakra-ui.com/docs/components/grid/usage)` to your list of imports at the top of the `AboutMe.tsx`:
+
+```tsx
+import { Box, Container, Grid } from "@chakra-ui/react"
+```
+
+Copy the example from the chakra docs, see what that looks like! Update background colours and text colours to show off your skills 🎉
+
+```tsx
+<Grid templateColumns='repeat(5, 1fr)' gap={6}>
+  <GridItem bg='green' w='100%' p={4} color='white'>
+    Javascript
+  </GridItem>
+  <GridItem bg='green' w='100%' p={4} color='white'>
+    React
+  </GridItem>
+  <GridItem bg='green' w='100%' p={4} color='white'>
+    Git
+  </GridItem>
+  <GridItem bg='green' w='100%' p={4} color='white'>
+    Python
+  </GridItem>
+</Grid>
+```
+
+We’re repeating this `GridItem` component here a bunch, let’s clean this up a bit!
+
+```tsx
+const SKILLS = ['Javascript', 'React', 'Git', 'Python', 'Django', 'Rust']
+
+<Grid templateColumns='repeat(3, 1fr)' gap={1}>
+{SKILLS.map((skill) => {
+    return (<GridItem bg='green' w='100%' p={4} color='white'>
+    {skill}
+  </GridItem>)
+  })}
+</Grid>
+
+```
+
+**NavBar**
+
+```bash
+mkdir src/components
+touch src/components/NavBar.tsx
+```
+
+Let’s go through chakra components to see what would work well here!
+
+[Tabs](https://chakra-ui.com/docs/components/tabs/usage)! Tabs! Tabs! Let’s add the sample code to our `NavBar.tsx` file 
+
+```tsx
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+
+export const NavBar = () => (
+  <Tabs>
+    <TabList>
+      <Tab>One</Tab>
+      <Tab>Two</Tab>
+      <Tab>Three</Tab>
+    </TabList>
+
+    <TabPanels>
+      <TabPanel>
+        <p>one!</p>
+      </TabPanel>
+      <TabPanel>
+        <p>two!</p>
+      </TabPanel>
+      <TabPanel>
+        <p>three!</p>
+      </TabPanel>
+    </TabPanels>
+  </Tabs>
+)
+```
+
+and import it into our main `App.tsx`
+
+```tsx
+export const App = () => (
+  <ChakraProvider theme={theme}>
+    <Box textAlign="center" fontSize="xl">
+      <Grid minH="100vh" p={3}>
+        <NavBar />
+        <AboutMe />
+        <ColorModeSwitcher justifySelf="flex-end" />
+      </Grid>
+    </Box>
+  </ChakraProvider>
+)
+```
+
+It’s looking good!
+
+**Tab Panel content**
+
+```tsx
+<Tabs>
+	<TabList>
+		<Tab>About Me</Tab>
+		<Tab>Projects</Tab>
+		<Tab>CV</Tab>
+		<Tab>Contact</Tab>
+	</TabList>
+
+	<TabPanels>
+		<TabPanel>
+			<AboutMe />
+		</TabPanel>
+		<TabPanel>
+			<p>Projects</p>
+		</TabPanel>
+		<TabPanel>
+			<p>CV</p>
+		</TabPanel>
+		<TabPanel>
+			<p>Contact</p>
+		</TabPanel>
+	</TabPanels>
+</Tabs>
+```
+
+And remove the `AboutMe` component from `App.tsx`
+
+**Projects view**
+
+Let’s create the Projects view by creating a new projects component:
+
+```bash
+touch src/views/Projects.tsx
+```
+
+Let’s build out a quick Project card - something with an image, title and description
+
+```tsx
+import { Box, Image, Link } from "@chakra-ui/react"
+
+export const Projects = () => (
+  (
+    <Box maxW='500px' borderWidth='1px' borderRadius='lg' overflow='hidden' alignContent='center'>
+      <Link href="https://placeholder.com">
+        <Image src="https://via.placeholder.com/500X300" />
+      </Link>
+      <Box p='4'>
+        <Box
+          mt='1'
+          fontWeight='semibold'
+          noOfLines={1}
+          textAlign='left'
+        >
+          Project Title
+        </Box>
+
+        <Box fontSize='sm' textAlign='left'>
+          A one or two sentence short description of the project.
+        </Box>
+      </Box>
+    </Box>
+  )
+)
+```
+
+But we need many of these - probably a smart move to convert this into a reusable component and move it to the component folder instead! 
+
+```tsx
+import { Box, Image, Link } from "@chakra-ui/react"
+
+export type ProjectCardProps = {
+  title: string;
+  description: string;
+  link: string;
+  imageUrl: string;
+}
+
+export function ProjectCard(props: ProjectCardProps) {
+  return (
+    <Box maxW='500px' borderWidth='1px' borderRadius='lg' overflow='hidden' alignContent='center'>
+      <Link href={props.link}>
+        <Image src={props.imageUrl} />
+      </Link>
+      <Box p='4'>
+        <Box
+          mt='1'
+          fontWeight='semibold'
+          noOfLines={1}
+          textAlign='left'
+        >
+          {props.title}
+        </Box>
+
+        <Box fontSize='sm' textAlign='left'>
+          {props.description}
+        </Box>
+      </Box>
+    </Box>
+  )
+}
+```
+
+Now all we need to do is create a ProjectView, generate a list of projects and pass them along to this component one by one!
+
+```tsx
+import { Grid } from '@chakra-ui/react'
+import { ProjectCard, ProjectCardProps } from '../components/ProjectCard'
+
+const PROJECTS: ProjectCardProps[] = [{
+  imageUrl: 'https://via.placeholder.com/500X300',
+  title: 'Sit amet porttitor eget dolor',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  link: 'https://placeholder.com',
+},
+{
+  imageUrl: 'https://via.placeholder.com/500X300',
+  title: 'Sit amet porttitor eget dolor',
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  link: 'https://placeholder.com',
+}]
+
+export function Projects() {
+  return (
+    <Grid templateColumns='repeat(3, 1fr)' gap={6}>
+      {PROJECTS.map((p: ProjectCardProps, index) => {
+        return <ProjectCard key={index} imageUrl={p.imageUrl} title={p.title} description={p.description} link={p.link} />
+      }
+      )}
+    </Grid>
+  )
+}
+```
+
+### building your app
+
+`npm run build` creates a `build` directory with a production build of your app.
